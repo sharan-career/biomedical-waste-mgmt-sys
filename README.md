@@ -1,0 +1,1 @@
+# biomedical-waste-mgmt-sys
