@@ -186,9 +186,11 @@ model Customer {
   taluka Taluka @relation(fields: [talukaId], references: [id])
   route  Route? @relation(fields: [routeId], references: [id], onDelete: SetNull)
 
-  contacts  CustomerContact[]
-  contracts Contract[]
-  rateCards RateCard[]
+  contacts    CustomerContact[]
+  contracts   Contract[]
+  rateCards   RateCard[]
+  invoices    Invoice[]
+  creditNotes CreditNote[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -262,6 +264,7 @@ model Contract {
 
   customer       Customer  @relation(fields: [customerId], references: [id])
   activeRateCard RateCard? @relation("ContractActiveRateCard", fields: [activeRateCardId], references: [id], onDelete: SetNull)
+  invoices       Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -294,11 +297,18 @@ model RateCard {
 }
 
 model RateCardComponent {
-  id            String                @id @default(uuid())
-  rateCardId    String
-  componentType RateCardComponentType
-  unitAmount    Decimal               @db.Decimal(14, 2)
-  taxable       Boolean               @default(false)
+  id              String                @id @default(uuid())
+  rateCardId      String
+  componentType   RateCardComponentType
+  // Tax-inclusive customer-facing price (e.g. a clinic's flat "Rs 600/month" already
+  // includes GST — matches how this business actually quotes and invoices, see the real
+  // bill samples in data/). Invoice generation backs out the taxable base from this.
+  unitAmount      Decimal               @db.Decimal(14, 2)
+  taxable         Boolean               @default(false)
+  // Captured per rate-card version (not hardcoded) so a future GST change only requires
+  // a new rate card version, not a code change — same versioning philosophy as pricing.
+  cgstRatePercent Decimal               @default(2.5) @db.Decimal(5, 2)
+  sgstRatePercent Decimal               @default(2.5) @db.Decimal(5, 2)
 
   rateCard RateCard @relation(fields: [rateCardId], references: [id], onDelete: Cascade)
 
@@ -307,4 +317,132 @@ model RateCardComponent {
 
   @@index([rateCardId])
   @@map("rate_card_components")
+}
+
+// Single running counter for invoice numbers (continuously incrementing across fiscal
+// years, matching the real business's existing numbering — only the FY segment of the
+// formatted invoice number changes; the sequence itself never resets). Singleton row.
+model InvoiceSequence {
+  id         String @id @default("default")
+  lastNumber Int    @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  @@map("invoice_sequences")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  APPROVED
+  SENT
+  CANCELLED
+}
+
+enum InvoiceLineType {
+  FIXED_FEE
+  PER_PICKUP
+  PER_BED
+  SERVICE_CHARGE
+  DISCOUNT
+}
+
+enum CreditNoteStatus {
+  DRAFT
+  APPROVED
+  APPLIED
+}
+
+model Invoice {
+  id                 String        @id @default(uuid())
+  invoiceNumber      String        @unique
+  customerId         String
+  contractId         String
+  invoiceDate        DateTime
+  billingPeriodStart DateTime
+  billingPeriodEnd   DateTime
+  dueDate            DateTime
+  subtotal           Decimal       @db.Decimal(14, 2)
+  taxAmount          Decimal       @db.Decimal(14, 2)
+  totalAmount        Decimal       @db.Decimal(14, 2)
+  status             InvoiceStatus @default(DRAFT)
+  cancelledReason    String?
+  approvedBy         String?
+  approvedAt         DateTime?
+  notes              String?
+
+  customer    Customer          @relation(fields: [customerId], references: [id])
+  contract    Contract          @relation(fields: [contractId], references: [id])
+  lineItems   InvoiceLineItem[]
+  creditNotes CreditNote[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@index([customerId, status])
+  @@index([contractId])
+  @@map("invoices")
+}
+
+model InvoiceLineItem {
+  id              String          @id @default(uuid())
+  invoiceId       String
+  description     String
+  lineType        InvoiceLineType
+  quantity        Decimal         @default(1) @db.Decimal(10, 2)
+  unitAmount      Decimal         @db.Decimal(14, 2)
+  // lineAmount = quantity * unitAmount (tax-inclusive); taxableAmount is the back-computed
+  // base once cgst/sgst are subtracted out — see RateCardComponent.unitAmount comment.
+  lineAmount      Decimal         @db.Decimal(14, 2)
+  taxableAmount   Decimal         @db.Decimal(14, 2)
+  cgstRatePercent Decimal         @default(0) @db.Decimal(5, 2)
+  cgstAmount      Decimal         @default(0) @db.Decimal(14, 2)
+  sgstRatePercent Decimal         @default(0) @db.Decimal(5, 2)
+  sgstAmount      Decimal         @default(0) @db.Decimal(14, 2)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([invoiceId])
+  @@map("invoice_line_items")
+}
+
+model CreditNote {
+  id         String           @id @default(uuid())
+  invoiceId  String
+  customerId String
+  reason     String
+  amount     Decimal          @db.Decimal(14, 2)
+  status     CreditNoteStatus @default(DRAFT)
+  approvedBy String?
+  approvedAt DateTime?
+
+  invoice   Invoice              @relation(fields: [invoiceId], references: [id])
+  customer  Customer             @relation(fields: [customerId], references: [id])
+  lineItems CreditNoteLineItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@index([invoiceId])
+  @@index([customerId])
+  @@map("credit_notes")
+}
+
+model CreditNoteLineItem {
+  id           String  @id @default(uuid())
+  creditNoteId String
+  description  String
+  amount       Decimal @db.Decimal(14, 2)
+
+  creditNote CreditNote @relation(fields: [creditNoteId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([creditNoteId])
+  @@map("credit_note_line_items")
 }

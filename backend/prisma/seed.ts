@@ -31,6 +31,15 @@ async function main() {
     });
   }
   console.log(`Seeded ${TALUKAS.length} talukas.`);
+
+  // Continues the real business's existing invoice numbering (last real invoice was
+  // PAG/26-27/2192) rather than resetting to 1 — only seeded once, never overwritten.
+  await prisma.invoiceSequence.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: { id: 'default', lastNumber: 2192 },
+  });
+  console.log('Seeded invoice sequence starting point.');
 }
 
 main()

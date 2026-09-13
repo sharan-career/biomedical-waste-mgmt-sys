@@ -95,3 +95,71 @@ export interface Contract {
   customer: { id: string; customerCode: string; organizationName: string };
   activeRateCard: RateCard | null;
 }
+
+export type InvoiceStatus = 'DRAFT' | 'APPROVED' | 'SENT' | 'CANCELLED';
+export type CreditNoteStatus = 'DRAFT' | 'APPROVED' | 'APPLIED';
+
+export interface InvoiceLineItem {
+  id: string;
+  invoiceId: string;
+  description: string;
+  lineType: RateCardComponentType;
+  quantity: string;
+  unitAmount: string;
+  lineAmount: string;
+  taxableAmount: string;
+  cgstRatePercent: string;
+  cgstAmount: string;
+  sgstRatePercent: string;
+  sgstAmount: string;
+}
+
+export interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  customerId: string;
+  contractId: string;
+  invoiceDate: string;
+  billingPeriodStart: string;
+  billingPeriodEnd: string;
+  dueDate: string;
+  subtotal: string;
+  taxAmount: string;
+  totalAmount: string;
+  status: InvoiceStatus;
+  cancelledReason: string | null;
+  notes: string | null;
+  customer: { id: string; customerCode: string; organizationName: string };
+  contract: { id: string; contractNumber: string };
+  lineItems: InvoiceLineItem[];
+}
+
+export interface CreditNoteLineItem {
+  id: string;
+  creditNoteId: string;
+  description: string;
+  amount: string;
+}
+
+export interface CreditNote {
+  id: string;
+  invoiceId: string;
+  customerId: string;
+  reason: string;
+  amount: string;
+  status: CreditNoteStatus;
+  lineItems: CreditNoteLineItem[];
+}
+
+export interface OrgProfile {
+  name: string;
+  address: string;
+  mobile: string;
+  email: string;
+  gstin: string;
+  stateName: string;
+  stateCode: string;
+  bankName: string;
+  bankAccountNo: string;
+  bankBranchIfsc: string;
+}

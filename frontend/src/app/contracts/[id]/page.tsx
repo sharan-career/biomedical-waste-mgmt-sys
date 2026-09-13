@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import { InvoicesPanel } from '@/components/invoices-panel';
 import { RequireAuth } from '@/components/require-auth';
 import { ApiError } from '@/lib/api-client';
 import { useAuth } from '@/lib/auth-context';
@@ -306,6 +307,8 @@ function ContractDetailContent() {
             ))}
           </ul>
         </div>
+
+        <InvoicesPanel contractId={contractId} contractStatus={contract.status} canManage={canManage} />
       </div>
     </div>
   );
