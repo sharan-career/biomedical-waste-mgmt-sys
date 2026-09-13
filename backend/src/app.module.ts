@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
@@ -11,6 +12,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { CustomersModule } from './modules/customers/customers.module';
+import { FollowUpsModule } from './modules/follow-ups/follow-ups.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { TalukasModule } from './modules/talukas/talukas.module';
 import { UsersModule } from './modules/users/users.module';
@@ -19,6 +21,7 @@ import { PrismaModule } from './prisma/prisma.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     AuditModule,
     AuthModule,
@@ -28,6 +31,7 @@ import { PrismaModule } from './prisma/prisma.module';
     ContractsModule,
     BillingModule,
     PaymentsModule,
+    FollowUpsModule,
   ],
   controllers: [AppController],
   providers: [

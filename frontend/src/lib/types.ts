@@ -214,3 +214,34 @@ export interface OrgProfile {
   bankAccountNo: string;
   bankBranchIfsc: string;
 }
+
+export type FollowUpType = 'PHONE_CALL' | 'WHATSAPP' | 'EMAIL' | 'VISIT' | 'OTHER';
+export type FollowUpStatus =
+  | 'OPEN'
+  | 'FOLLOW_UP_REQUIRED'
+  | 'PROMISE_TO_PAY'
+  | 'DISPUTED'
+  | 'ESCALATED'
+  | 'CLOSED';
+
+export interface FollowUp {
+  id: string;
+  customerId: string;
+  invoiceId: string | null;
+  assignedToId: string;
+  previousAssignedToId: string | null;
+  followUpDate: string;
+  followUpType: FollowUpType;
+  contactPerson: string | null;
+  discussionNotes: string | null;
+  customerResponse: string | null;
+  promiseAmount: string | null;
+  promisePaymentDate: string | null;
+  nextFollowUpDate: string | null;
+  status: FollowUpStatus;
+  previousFollowUpId: string | null;
+  isSystemGenerated: boolean;
+  customer: { id: string; customerCode: string; organizationName: string; routeId: string | null };
+  invoice: { id: string; invoiceNumber: string; outstandingAmount: string } | null;
+  assignedTo: { id: string; fullName: string };
+}

@@ -41,10 +41,11 @@ model User {
   updatedBy String?
   deletedAt DateTime?
 
-  roles          UserRole[]
-  refreshTokens  RefreshToken[]
-  auditLogs      AuditLog[]
-  assignedRoutes Route[]        @relation("RouteExecutive")
+  roles             UserRole[]
+  refreshTokens     RefreshToken[]
+  auditLogs         AuditLog[]
+  assignedRoutes    Route[]        @relation("RouteExecutive")
+  assignedFollowUps FollowUp[]     @relation("FollowUpAssignee")
 
   @@map("users")
 }
@@ -192,6 +193,7 @@ model Customer {
   invoices    Invoice[]
   creditNotes CreditNote[]
   payments    Payment[]
+  followUps   FollowUp[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -382,6 +384,7 @@ model Invoice {
   lineItems   InvoiceLineItem[]
   creditNotes CreditNote[]
   allocations PaymentAllocation[]
+  followUps   FollowUp[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -512,4 +515,61 @@ model PaymentAllocation {
   @@index([paymentId])
   @@index([invoiceId])
   @@map("payment_allocations")
+}
+
+enum FollowUpType {
+  PHONE_CALL
+  WHATSAPP
+  EMAIL
+  VISIT
+  OTHER
+}
+
+enum FollowUpStatus {
+  OPEN
+  FOLLOW_UP_REQUIRED
+  PROMISE_TO_PAY
+  DISPUTED
+  ESCALATED
+  CLOSED
+}
+
+model FollowUp {
+  id                   String         @id @default(uuid())
+  customerId           String
+  invoiceId            String?
+  assignedToId         String
+  previousAssignedToId String?
+  followUpDate         DateTime
+  followUpType         FollowUpType
+  contactPerson        String?
+  discussionNotes      String?
+  customerResponse     String?
+  promiseAmount        Decimal?       @db.Decimal(14, 2)
+  promisePaymentDate   DateTime?
+  nextFollowUpDate     DateTime?
+  status               FollowUpStatus @default(OPEN)
+  // Each state transition creates a NEW row rather than mutating this one (see
+  // BUSINESS_WORKFLOW.md §4) — previousFollowUpId chains them so full history is
+  // reconstructable; the row nothing else points to via this chain is "the current one".
+  previousFollowUpId   String?        @unique
+  // True for rows created by the overdue-invoice / broken-promise scheduled jobs, not a
+  // human — lets the "Follow-ups Today" screen visually flag these (see EDGE_CASES.md #10).
+  isSystemGenerated    Boolean        @default(false)
+
+  customer         Customer  @relation(fields: [customerId], references: [id])
+  invoice          Invoice?  @relation(fields: [invoiceId], references: [id])
+  assignedTo       User      @relation("FollowUpAssignee", fields: [assignedToId], references: [id])
+  previousFollowUp FollowUp? @relation("FollowUpChain", fields: [previousFollowUpId], references: [id])
+  nextFollowUp     FollowUp? @relation("FollowUpChain")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@index([assignedToId, status, nextFollowUpDate])
+  @@index([customerId])
+  @@index([invoiceId])
+  @@map("follow_ups")
 }
