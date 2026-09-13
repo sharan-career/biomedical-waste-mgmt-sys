@@ -2,3 +2,157 @@
 > frontend@0.1.0 dev
 > next dev
 
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 9s
+ ○ Compiling / ...
+ ✓ Compiled / in 10s (595 modules)
+ ✓ Compiled in 1804ms (292 modules)
+ GET / 200 in 150ms
+ GET / 200 in 59ms
+ GET / 200 in 48ms
+ ○ Compiling /customers/[id] ...
+ ✓ Compiled /customers/[id] in 1753ms (661 modules)
+ ⨯ Error: Cannot find module './vendor-chunks/@swc.js'
+Require stack:
+- C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\webpack-runtime.js
+- C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\app\customers\[id]\page.js
+- C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\require.js
+- C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\load-components.js
+- C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\utils.js
+- C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\dev\static-paths-worker.js
+- C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\compiled\jest-worker\processChild.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+    at C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\require-hook.js:55:36
+    at Module._load (node:internal/modules/cjs/loader:1038:27)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+    at mod.require (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:182:18)
+    at __webpack_require__.f.require (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\webpack-runtime.js:198:28)
+    at C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\webpack-runtime.js:110:67) {
+  type: 'Error',
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Workspace\\learn\\biomedical-waste-mgmt-sys\\frontend\\.next\\server\\webpack-runtime.js',
+    'C:\\Workspace\\learn\\biomedical-waste-mgmt-sys\\frontend\\.next\\server\\app\\customers\\[id]\\page.js',
+    'C:\\Workspace\\learn\\biomedical-waste-mgmt-sys\\frontend\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Workspace\\learn\\biomedical-waste-mgmt-sys\\frontend\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Workspace\\learn\\biomedical-waste-mgmt-sys\\frontend\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Workspace\\learn\\biomedical-waste-mgmt-sys\\frontend\\node_modules\\next\\dist\\server\\dev\\static-paths-worker.js',
+    'C:\\Workspace\\learn\\biomedical-waste-mgmt-sys\\frontend\\node_modules\\next\\dist\\compiled\\jest-worker\\processChild.js'
+  ],
+  page: '/customers/f0d2a81f-dc83-4260-8292-69b3655d3f9d'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 3.2s (887 modules)
+ GET /customers/f0d2a81f-dc83-4260-8292-69b3655d3f9d 500 in 6373ms
+ ○ Compiling /_not-found ...
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled /favicon.ico in 2.8s (936 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 3304ms
+ GET /favicon.ico 200 in 2223ms
+ GET /customers/f0d2a81f-dc83-4260-8292-69b3655d3f9d 200 in 1891ms
+ GET /_next/static/css/app/layout.css?v=1789314933308 404 in 98ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 96ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 90ms
+ GET /_next/static/chunks/main-app.js?v=1789314933308 404 in 104ms
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat 'C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\app\page.js'
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/app/page' in C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server for build dependencies doesn't lead to expected result 'C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\app\page.js', but to 'Error: Can't resolve '../../../../.next/server/app/page' in 'C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../../.next/server/app/page (expected C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\app\page.js)
+<w>  at file dependencies C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\require.js
+<w>  at file C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\require.js
+<w>  at file dependencies C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\load-components.js
+<w>  at file C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\utils.js
+<w>  at file C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\utils.js
+<w>  at file dependencies C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+ GET /customers/f0d2a81f-dc83-4260-8292-69b3655d3f9d 200 in 134ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 68ms
+ GET /_next/static/css/app/layout.css?v=1789314994546 404 in 87ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 117ms
+ GET /_next/static/chunks/main-app.js?v=1789314994546 404 in 142ms
+ GET /favicon.ico 200 in 43ms
+ ○ Compiling / ...
+ ✓ Compiled / in 697ms (343 modules)
+ ⨯ TypeError: Cannot read properties of undefined (reading 'clientModules')
+    at C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:25679
+    at C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\lib\trace\tracer.js:191:62
+    at C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\lib\trace\tracer.js:191:31
+    at ne (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:42:1678)
+    at async doRender (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\base-server.js:1427:30)
+    at async cacheEntry.responseCache.get.routeKind (C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\base-server.js:1588:28) {
+  page: '/'
+}
+ GET / 500 in 1072ms
+ ○ Compiling /_not-found ...
+ GET / 200 in 684ms
+ ✓ Compiled /_not-found in 888ms (851 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1248ms
+ GET / 200 in 515ms
+ GET /_next/static/css/app/layout.css?v=1789315083474 404 in 114ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 130ms
+ GET /_next/static/chunks/webpack.js?v=1789315083474 404 in 283ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 129ms
+ GET /_next/static/chunks/main-app.js?v=1789315083474 404 in 140ms
+ GET /_next/static/chunks/app/page.js 404 in 130ms
+ GET /_next/static/chunks/app/layout.js 404 in 121ms
+ ✓ Compiled /favicon.ico in 192ms (376 modules)
+ GET /favicon.ico 200 in 366ms
+ GET / 200 in 111ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 77ms
+ GET /_next/static/css/app/layout.css?v=1789315106175 404 in 118ms
+ GET /_next/static/chunks/webpack.js?v=1789315106175 404 in 216ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 141ms
+ GET /_next/static/chunks/main-app.js?v=1789315106175 404 in 148ms
+ GET /_next/static/chunks/app/page.js 404 in 151ms
+ GET /_next/static/chunks/app/layout.js 404 in 139ms
+ GET /favicon.ico 200 in 20ms
+ GET / 200 in 49ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 68ms
+ GET /_next/static/css/app/layout.css?v=1789315114566 404 in 78ms
+ GET /_next/static/chunks/webpack.js?v=1789315114566 404 in 166ms
+ GET /_next/static/chunks/main-app.js?v=1789315114566 404 in 127ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 123ms
+ GET /_next/static/chunks/app/layout.js 404 in 111ms
+ GET /_next/static/chunks/app/page.js 404 in 120ms
+ GET /favicon.ico 200 in 17ms
+ GET / 200 in 46ms
+ GET /_next/static/css/app/layout.css?v=1789315127808 404 in 80ms
+ GET /_next/static/chunks/webpack.js?v=1789315127808 404 in 176ms
+ GET /_next/static/chunks/main-app.js?v=1789315127808 404 in 126ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 121ms
+ GET /_next/static/chunks/app/page.js 404 in 116ms
+ GET /_next/static/chunks/app/layout.js 404 in 113ms
+ GET /_next/static/css/app/layout.css?v=1789315127808 404 in 86ms
+ GET / 200 in 118ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 38ms
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat 'C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\app\customers\[id]\page.js'
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/app/customers/[id]/page' in C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server for build dependencies doesn't lead to expected result 'C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\app\customers\[id]\page.js', but to 'Error: Can't resolve '../../../../.next/server/app/customers/[id]/page' in 'C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../../.next/server/app/customers/[id]/page (expected C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\.next\server\app\customers\[id]\page.js)
+<w>  at file dependencies C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\require.js
+<w>  at file C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\require.js
+<w>  at file dependencies C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\load-components.js
+<w>  at file C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\utils.js
+<w>  at file C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\utils.js
+<w>  at file dependencies C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs C:\Workspace\learn\biomedical-waste-mgmt-sys\frontend\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+[?25h
