@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { ContractsPanel } from '@/components/contracts-panel';
 import { CustomerForm, customerToFormDefaults, type CustomerFormData } from '@/components/customer-form';
+import { PaymentsPanel } from '@/components/payments-panel';
 import { RequireAuth } from '@/components/require-auth';
 import { ApiError } from '@/lib/api-client';
 import { useAuth } from '@/lib/auth-context';
@@ -228,6 +229,7 @@ function CustomerDetailContent() {
         </div>
 
         <ContractsPanel customerId={customerId} canManage={canManage} />
+        <PaymentsPanel customerId={customerId} canManage={canManage} />
         <ContactsPanel customerId={customerId} canManage={canManage} />
       </div>
     </div>

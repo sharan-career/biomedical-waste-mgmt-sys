@@ -191,6 +191,7 @@ model Customer {
   rateCards   RateCard[]
   invoices    Invoice[]
   creditNotes CreditNote[]
+  payments    Payment[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -335,6 +336,8 @@ enum InvoiceStatus {
   DRAFT
   APPROVED
   SENT
+  PARTIALLY_PAID
+  PAID
   CANCELLED
 }
 
@@ -364,16 +367,21 @@ model Invoice {
   subtotal           Decimal       @db.Decimal(14, 2)
   taxAmount          Decimal       @db.Decimal(14, 2)
   totalAmount        Decimal       @db.Decimal(14, 2)
+  // Recomputed from non-reversed PaymentAllocations on every payment/reversal, never
+  // hand-set directly — the allocation rows are the source of truth (see EDGE_CASES.md #14).
+  paidAmount         Decimal       @default(0) @db.Decimal(14, 2)
+  outstandingAmount  Decimal       @db.Decimal(14, 2)
   status             InvoiceStatus @default(DRAFT)
   cancelledReason    String?
   approvedBy         String?
   approvedAt         DateTime?
   notes              String?
 
-  customer    Customer          @relation(fields: [customerId], references: [id])
-  contract    Contract          @relation(fields: [contractId], references: [id])
+  customer    Customer            @relation(fields: [customerId], references: [id])
+  contract    Contract            @relation(fields: [contractId], references: [id])
   lineItems   InvoiceLineItem[]
   creditNotes CreditNote[]
+  allocations PaymentAllocation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -445,4 +453,63 @@ model CreditNoteLineItem {
 
   @@index([creditNoteId])
   @@map("credit_note_line_items")
+}
+
+enum PaymentMode {
+  BANK_TRANSFER
+  UPI
+  CHEQUE
+  CASH
+  OTHER
+}
+
+enum PaymentStatus {
+  RECORDED
+  REVERSED
+}
+
+model Payment {
+  id                  String        @id @default(uuid())
+  customerId          String
+  amount              Decimal       @db.Decimal(14, 2)
+  paymentMode         PaymentMode
+  paymentDate         DateTime
+  referenceNumber     String?
+  bankDetails         String?
+  notes               String?
+  status              PaymentStatus @default(RECORDED)
+  // Set on the ORIGINAL payment once reversed; the reversal itself is a separate Payment
+  // row referencing this one — never mutate/delete the original (see EDGE_CASES.md #4).
+  reversalOfPaymentId String?       @unique
+
+  customer    Customer            @relation(fields: [customerId], references: [id])
+  reversalOf  Payment?            @relation("PaymentReversal", fields: [reversalOfPaymentId], references: [id])
+  reversedBy  Payment?            @relation("PaymentReversal")
+  allocations PaymentAllocation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@index([customerId, status])
+  @@map("payments")
+}
+
+model PaymentAllocation {
+  id              String  @id @default(uuid())
+  paymentId       String
+  // Null invoiceId = unallocated credit balance on the customer (overpayment or advance —
+  // see EDGE_CASES.md #8). Negative allocatedAmount = a reversal offsetting an earlier one.
+  invoiceId       String?
+  allocatedAmount Decimal @db.Decimal(14, 2)
+
+  payment Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  invoice Invoice? @relation(fields: [invoiceId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([paymentId])
+  @@index([invoiceId])
+  @@map("payment_allocations")
 }

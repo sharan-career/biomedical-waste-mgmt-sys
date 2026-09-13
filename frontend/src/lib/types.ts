@@ -96,7 +96,7 @@ export interface Contract {
   activeRateCard: RateCard | null;
 }
 
-export type InvoiceStatus = 'DRAFT' | 'APPROVED' | 'SENT' | 'CANCELLED';
+export type InvoiceStatus = 'DRAFT' | 'APPROVED' | 'SENT' | 'PARTIALLY_PAID' | 'PAID' | 'CANCELLED';
 export type CreditNoteStatus = 'DRAFT' | 'APPROVED' | 'APPLIED';
 
 export interface InvoiceLineItem {
@@ -126,6 +126,8 @@ export interface Invoice {
   subtotal: string;
   taxAmount: string;
   totalAmount: string;
+  paidAmount: string;
+  outstandingAmount: string;
   status: InvoiceStatus;
   cancelledReason: string | null;
   notes: string | null;
@@ -149,6 +151,55 @@ export interface CreditNote {
   amount: string;
   status: CreditNoteStatus;
   lineItems: CreditNoteLineItem[];
+}
+
+export type PaymentMode = 'BANK_TRANSFER' | 'UPI' | 'CHEQUE' | 'CASH' | 'OTHER';
+export type PaymentStatus = 'RECORDED' | 'REVERSED';
+
+export interface PaymentAllocation {
+  id: string;
+  paymentId: string;
+  invoiceId: string | null;
+  allocatedAmount: string;
+  invoice: { id: string; invoiceNumber: string } | null;
+}
+
+export interface Payment {
+  id: string;
+  customerId: string;
+  amount: string;
+  paymentMode: PaymentMode;
+  paymentDate: string;
+  referenceNumber: string | null;
+  bankDetails: string | null;
+  notes: string | null;
+  status: PaymentStatus;
+  reversalOfPaymentId: string | null;
+  customer: { id: string; customerCode: string; organizationName: string };
+  allocations: PaymentAllocation[];
+}
+
+export interface AgingBuckets {
+  current: string;
+  days1To30: string;
+  days31To60: string;
+  days61To90: string;
+  days90Plus: string;
+}
+
+export interface AgingInvoiceItem {
+  invoiceId: string;
+  invoiceNumber: string;
+  customer: { id: string; customerCode: string; organizationName: string };
+  dueDate: string;
+  outstandingAmount: string;
+  daysPastDue: number;
+  bucket: keyof AgingBuckets;
+}
+
+export interface AgingReport {
+  buckets: AgingBuckets;
+  invoices: AgingInvoiceItem[];
 }
 
 export interface OrgProfile {

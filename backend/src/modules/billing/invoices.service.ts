@@ -112,6 +112,7 @@ export class InvoicesService {
           subtotal,
           taxAmount,
           totalAmount,
+          outstandingAmount: totalAmount,
           notes: dto.notes,
           createdBy: actorUserId,
           updatedBy: actorUserId,
@@ -248,6 +249,13 @@ export class InvoicesService {
     const invoice = await this.findOneOrThrow(id);
     if (invoice.status === 'CANCELLED') {
       throw new BadRequestException('Invoice is already cancelled');
+    }
+    // Per EDGE_CASES.md #5 — a partially/fully paid invoice can't be silently cancelled;
+    // the payment(s) must be reallocated to another invoice or reversed first.
+    if (new Decimal(invoice.paidAmount.toString()).greaterThan(0)) {
+      throw new BadRequestException(
+        'Cannot cancel an invoice with payments already applied — reverse or reallocate them first',
+      );
     }
 
     return this.prisma.$transaction(async (tx) => {

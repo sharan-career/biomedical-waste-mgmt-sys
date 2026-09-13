@@ -3,9 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Decimal } from '@prisma/client/runtime/library';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { CreateCreditNoteDto } from './dto/create-credit-note.dto';
+import { recomputeInvoiceBalance } from './invoice-balance.util';
 
 const CREDIT_NOTE_INCLUDE = { lineItems: true } as const;
 
@@ -107,12 +109,27 @@ export class CreditNotesService {
       );
     }
 
+    const invoice = await this.prisma.invoice.findUniqueOrThrow({
+      where: { id: creditNote.invoiceId },
+    });
+    if (
+      new Decimal(creditNote.amount.toString()).greaterThan(
+        invoice.outstandingAmount.toString(),
+      )
+    ) {
+      throw new BadRequestException(
+        "Credit note amount exceeds the invoice's current outstanding balance",
+      );
+    }
+
     return this.prisma.$transaction(async (tx) => {
       const updated = await tx.creditNote.update({
         where: { id },
         data: { status: 'APPLIED', updatedBy: actorUserId },
         include: CREDIT_NOTE_INCLUDE,
       });
+
+      await recomputeInvoiceBalance(tx, creditNote.invoiceId);
 
       await this.auditService.record(tx, {
         userId: actorUserId,

@@ -11,6 +11,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { CustomersModule } from './modules/customers/customers.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 import { TalukasModule } from './modules/talukas/talukas.module';
 import { UsersModule } from './modules/users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -26,6 +27,7 @@ import { PrismaModule } from './prisma/prisma.module';
     TalukasModule,
     ContractsModule,
     BillingModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [
