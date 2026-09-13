@@ -1,0 +1,136 @@
+// Phase 1 scope only — Identity & Access + Taluka/Route (per docs/DEVELOPMENT_ROADMAP.md).
+// Customer/Contract/Billing/Payment/Collections models land in their own phases.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleName {
+  SUPER_ADMIN
+  ACCOUNTS_MANAGER
+  COLLECTION_EXECUTIVE
+  MANAGEMENT
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String
+  fullName     String
+  phone        String?
+  status       UserStatus @default(ACTIVE)
+  lastLoginAt  DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+
+  roles         UserRole[]
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+  assignedRoutes Route[]      @relation("RouteExecutive")
+
+  @@map("users")
+}
+
+model Role {
+  id          String     @id @default(uuid())
+  name        RoleName   @unique
+  description String?
+
+  users UserRole[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("roles")
+}
+
+model UserRole {
+  userId String
+  roleId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model RefreshToken {
+  id          String    @id @default(uuid())
+  userId      String
+  tokenHash   String
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  createdByIp String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  userId        String?
+  action        String // e.g. USER_CREATED, USER_ROLE_CHANGED, LOGIN_SUCCEEDED
+  entityType    String
+  entityId      String
+  previousValue Json?
+  newValue      Json?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@map("audit_logs")
+}
+
+model Taluka {
+  id           String @id @default(uuid())
+  name         String @unique
+  districtName String @default("Kalaburagi")
+
+  routes Route[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("talukas")
+}
+
+model Route {
+  id                 String  @id @default(uuid())
+  talukaId           String
+  routeNumber        Int
+  name               String?
+  assignedExecutiveId String?
+
+  taluka           Taluka @relation(fields: [talukaId], references: [id])
+  assignedExecutive User?  @relation("RouteExecutive", fields: [assignedExecutiveId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([talukaId, routeNumber])
+  @@map("routes")
+}

@@ -1,1 +1,4 @@
-interview-prep-nodejs-serverless/
+node_modules/
+.env
+.env.local
+/backend/dist
