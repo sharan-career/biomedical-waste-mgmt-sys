@@ -51,3 +51,47 @@ export interface Paginated<T> {
   data: T[];
   meta: { total: number; page: number; limit: number };
 }
+
+export type BillingFrequency = 'MONTHLY' | 'QUARTERLY' | 'HALF_YEARLY' | 'YEARLY' | 'CUSTOM';
+export type ContractStatus = 'DRAFT' | 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+export type RateCardStatus = 'DRAFT' | 'ACTIVE' | 'SUPERSEDED';
+export type RateCardComponentType =
+  | 'FIXED_FEE'
+  | 'PER_PICKUP'
+  | 'PER_BED'
+  | 'SERVICE_CHARGE'
+  | 'DISCOUNT';
+
+export interface RateCardComponent {
+  id: string;
+  rateCardId: string;
+  componentType: RateCardComponentType;
+  unitAmount: string;
+  taxable: boolean;
+}
+
+export interface RateCard {
+  id: string;
+  name: string;
+  customerId: string;
+  effectiveFrom: string;
+  effectiveTo: string | null;
+  status: RateCardStatus;
+  components: RateCardComponent[];
+}
+
+export interface Contract {
+  id: string;
+  contractNumber: string;
+  customerId: string;
+  startDate: string;
+  endDate: string | null;
+  billingFrequency: BillingFrequency;
+  billingDayOfPeriod: number | null;
+  paymentTermsDays: number | null;
+  status: ContractStatus;
+  activeRateCardId: string | null;
+  notes: string | null;
+  customer: { id: string; customerCode: string; organizationName: string };
+  activeRateCard: RateCard | null;
+}

@@ -1,5 +1,8 @@
 // Phase 1: Identity & Access + Taluka/Route. Phase 2: Customer + CustomerContact.
-// Contract/Billing/Payment/Collections models land in their own later phases.
+// Phase 3: Contract + RateCard + RateCardComponent (flat/tiered pricing only — no
+// usage-based/PER_KG billing in this business, so WasteCategory/MonthlyWasteRecord are
+// intentionally not modeled; see docs/BUSINESS_REQUIREMENTS.md open question #1).
+// Billing/Payment/Collections models land in their own later phases.
 // (per docs/DEVELOPMENT_ROADMAP.md)
 
 generator client {
@@ -183,7 +186,9 @@ model Customer {
   taluka Taluka @relation(fields: [talukaId], references: [id])
   route  Route? @relation(fields: [routeId], references: [id], onDelete: SetNull)
 
-  contacts CustomerContact[]
+  contacts  CustomerContact[]
+  contracts Contract[]
+  rateCards RateCard[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -211,4 +216,95 @@ model CustomerContact {
 
   @@index([customerId])
   @@map("customer_contacts")
+}
+
+enum BillingFrequency {
+  MONTHLY
+  QUARTERLY
+  HALF_YEARLY
+  YEARLY
+  CUSTOM
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  TERMINATED
+}
+
+enum RateCardStatus {
+  DRAFT
+  ACTIVE
+  SUPERSEDED
+}
+
+enum RateCardComponentType {
+  FIXED_FEE
+  PER_PICKUP
+  PER_BED
+  SERVICE_CHARGE
+  DISCOUNT
+}
+
+model Contract {
+  id                 String           @id @default(uuid())
+  contractNumber     String           @unique
+  customerId         String
+  startDate          DateTime
+  endDate            DateTime?
+  billingFrequency   BillingFrequency
+  billingDayOfPeriod Int?
+  paymentTermsDays   Int?
+  status             ContractStatus   @default(DRAFT)
+  activeRateCardId   String?          @unique
+  notes              String?
+
+  customer       Customer  @relation(fields: [customerId], references: [id])
+  activeRateCard RateCard? @relation("ContractActiveRateCard", fields: [activeRateCardId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@index([customerId, status])
+  @@map("contracts")
+}
+
+model RateCard {
+  id            String         @id @default(uuid())
+  name          String
+  customerId    String?
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+  status        RateCardStatus @default(DRAFT)
+
+  customer   Customer?           @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  components RateCardComponent[]
+  contract   Contract?           @relation("ContractActiveRateCard")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@index([customerId, status])
+  @@map("rate_cards")
+}
+
+model RateCardComponent {
+  id            String                @id @default(uuid())
+  rateCardId    String
+  componentType RateCardComponentType
+  unitAmount    Decimal               @db.Decimal(14, 2)
+  taxable       Boolean               @default(false)
+
+  rateCard RateCard @relation(fields: [rateCardId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([rateCardId])
+  @@map("rate_card_components")
 }

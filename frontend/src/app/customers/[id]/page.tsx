@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import { ContractsPanel } from '@/components/contracts-panel';
 import { CustomerForm, customerToFormDefaults, type CustomerFormData } from '@/components/customer-form';
 import { RequireAuth } from '@/components/require-auth';
 import { ApiError } from '@/lib/api-client';
@@ -226,6 +227,7 @@ function CustomerDetailContent() {
           )}
         </div>
 
+        <ContractsPanel customerId={customerId} canManage={canManage} />
         <ContactsPanel customerId={customerId} canManage={canManage} />
       </div>
     </div>
