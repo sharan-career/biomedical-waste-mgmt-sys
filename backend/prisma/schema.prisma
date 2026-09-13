@@ -1,5 +1,6 @@
-// Phase 1 scope only — Identity & Access + Taluka/Route (per docs/DEVELOPMENT_ROADMAP.md).
-// Customer/Contract/Billing/Payment/Collections models land in their own phases.
+// Phase 1: Identity & Access + Taluka/Route. Phase 2: Customer + CustomerContact.
+// Contract/Billing/Payment/Collections models land in their own later phases.
+// (per docs/DEVELOPMENT_ROADMAP.md)
 
 generator client {
   provider = "prisma-client-js"
@@ -37,17 +38,17 @@ model User {
   updatedBy String?
   deletedAt DateTime?
 
-  roles         UserRole[]
-  refreshTokens RefreshToken[]
-  auditLogs     AuditLog[]
-  assignedRoutes Route[]      @relation("RouteExecutive")
+  roles          UserRole[]
+  refreshTokens  RefreshToken[]
+  auditLogs      AuditLog[]
+  assignedRoutes Route[]        @relation("RouteExecutive")
 
   @@map("users")
 }
 
 model Role {
-  id          String     @id @default(uuid())
-  name        RoleName   @unique
+  id          String   @id @default(uuid())
+  name        RoleName @unique
   description String?
 
   users UserRole[]
@@ -88,7 +89,7 @@ model RefreshToken {
 }
 
 model AuditLog {
-  id            String   @id @default(uuid())
+  id            String  @id @default(uuid())
   userId        String?
   action        String // e.g. USER_CREATED, USER_ROLE_CHANGED, LOGIN_SUCCEEDED
   entityType    String
@@ -110,7 +111,8 @@ model Taluka {
   name         String @unique
   districtName String @default("Kalaburagi")
 
-  routes Route[]
+  routes    Route[]
+  customers Customer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -119,18 +121,94 @@ model Taluka {
 }
 
 model Route {
-  id                 String  @id @default(uuid())
-  talukaId           String
-  routeNumber        Int
-  name               String?
+  id                  String  @id @default(uuid())
+  talukaId            String
+  routeNumber         Int
+  name                String?
   assignedExecutiveId String?
 
-  taluka           Taluka @relation(fields: [talukaId], references: [id])
-  assignedExecutive User?  @relation("RouteExecutive", fields: [assignedExecutiveId], references: [id], onDelete: SetNull)
+  taluka            Taluka     @relation(fields: [talukaId], references: [id])
+  assignedExecutive User?      @relation("RouteExecutive", fields: [assignedExecutiveId], references: [id], onDelete: SetNull)
+  customers         Customer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([talukaId, routeNumber])
   @@map("routes")
+}
+
+enum CustomerType {
+  PRIVATE
+  GOVERNMENT
+}
+
+enum FacilityType {
+  BEDDED_HOSPITAL
+  CLINIC
+  DENTAL_CLINIC
+  LAB
+  OTHER
+}
+
+enum CustomerStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ContactType {
+  PRIMARY
+  ACCOUNTS
+  OTHER
+}
+
+model Customer {
+  id               String         @id @default(uuid())
+  customerCode     String         @unique
+  organizationName String
+  customerType     CustomerType
+  facilityType     FacilityType
+  bedCount         Int?
+  talukaId         String
+  routeId          String?
+  address          String
+  city             String
+  state            String
+  pincode          String
+  gstNumber        String?
+  panNumber        String?
+  paymentTermsDays Int            @default(30)
+  status           CustomerStatus @default(ACTIVE)
+
+  taluka Taluka @relation(fields: [talukaId], references: [id])
+  route  Route? @relation(fields: [routeId], references: [id], onDelete: SetNull)
+
+  contacts CustomerContact[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+
+  @@index([talukaId, status])
+  @@index([routeId])
+  @@map("customers")
+}
+
+model CustomerContact {
+  id          String      @id @default(uuid())
+  customerId  String
+  contactType ContactType
+  name        String
+  phone       String?
+  email       String?
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@map("customer_contacts")
 }

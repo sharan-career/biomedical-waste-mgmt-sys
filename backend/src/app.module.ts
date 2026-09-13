@@ -8,6 +8,8 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CustomersModule } from './modules/customers/customers.module';
+import { TalukasModule } from './modules/talukas/talukas.module';
 import { UsersModule } from './modules/users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -18,6 +20,8 @@ import { PrismaModule } from './prisma/prisma.module';
     AuditModule,
     AuthModule,
     UsersModule,
+    CustomersModule,
+    TalukasModule,
   ],
   controllers: [AppController],
   providers: [
