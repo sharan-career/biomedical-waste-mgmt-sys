@@ -44,9 +44,15 @@ function DashboardContent() {
           >
             Follow-ups Today
           </Link>
+          <Link
+            href="/reminders"
+            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Reminders
+          </Link>
         </div>
         <p className="mt-4 text-sm text-gray-500">
-          Automated reminders and Reports modules land in later phases.
+          Dashboard/Reports modules land in later phases.
         </p>
       </div>
     </div>

@@ -14,6 +14,7 @@ import { ContractsModule } from './modules/contracts/contracts.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { FollowUpsModule } from './modules/follow-ups/follow-ups.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { RemindersModule } from './modules/reminders/reminders.module';
 import { TalukasModule } from './modules/talukas/talukas.module';
 import { UsersModule } from './modules/users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -32,6 +33,7 @@ import { PrismaModule } from './prisma/prisma.module';
     BillingModule,
     PaymentsModule,
     FollowUpsModule,
+    RemindersModule,
   ],
   controllers: [AppController],
   providers: [

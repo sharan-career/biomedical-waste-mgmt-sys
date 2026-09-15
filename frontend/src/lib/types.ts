@@ -245,3 +245,33 @@ export interface FollowUp {
   invoice: { id: string; invoiceNumber: string; outstandingAmount: string } | null;
   assignedTo: { id: string; fullName: string };
 }
+
+export type ReminderTriggerType = 'DAYS_BEFORE_DUE' | 'ON_DUE_DATE' | 'DAYS_AFTER_DUE';
+export type ReminderChannel = 'WHATSAPP' | 'EMAIL' | 'SMS';
+export type ReminderDeliveryStatus = 'SENT' | 'FAILED' | 'DELIVERED' | 'READ';
+
+export interface ReminderRule {
+  id: string;
+  name: string;
+  triggerType: ReminderTriggerType;
+  triggerOffsetDays: number;
+  channel: ReminderChannel;
+  messageTemplate: string;
+  active: boolean;
+}
+
+export interface ReminderLog {
+  id: string;
+  ruleId: string;
+  customerId: string;
+  invoiceId: string;
+  channel: ReminderChannel;
+  message: string;
+  sentAt: string | null;
+  deliveryStatus: ReminderDeliveryStatus;
+  retryCount: number;
+  lastError: string | null;
+  rule: { id: string; name: string };
+  customer: { id: string; customerCode: string; organizationName: string };
+  invoice: { id: string; invoiceNumber: string };
+}

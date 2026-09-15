@@ -187,13 +187,14 @@ model Customer {
   taluka Taluka @relation(fields: [talukaId], references: [id])
   route  Route? @relation(fields: [routeId], references: [id], onDelete: SetNull)
 
-  contacts    CustomerContact[]
-  contracts   Contract[]
-  rateCards   RateCard[]
-  invoices    Invoice[]
-  creditNotes CreditNote[]
-  payments    Payment[]
-  followUps   FollowUp[]
+  contacts     CustomerContact[]
+  contracts    Contract[]
+  rateCards    RateCard[]
+  invoices     Invoice[]
+  creditNotes  CreditNote[]
+  payments     Payment[]
+  followUps    FollowUp[]
+  reminderLogs ReminderLog[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -379,12 +380,13 @@ model Invoice {
   approvedAt         DateTime?
   notes              String?
 
-  customer    Customer            @relation(fields: [customerId], references: [id])
-  contract    Contract            @relation(fields: [contractId], references: [id])
-  lineItems   InvoiceLineItem[]
-  creditNotes CreditNote[]
-  allocations PaymentAllocation[]
-  followUps   FollowUp[]
+  customer     Customer            @relation(fields: [customerId], references: [id])
+  contract     Contract            @relation(fields: [contractId], references: [id])
+  lineItems    InvoiceLineItem[]
+  creditNotes  CreditNote[]
+  allocations  PaymentAllocation[]
+  followUps    FollowUp[]
+  reminderLogs ReminderLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -572,4 +574,74 @@ model FollowUp {
   @@index([customerId])
   @@index([invoiceId])
   @@map("follow_ups")
+}
+
+enum ReminderTriggerType {
+  DAYS_BEFORE_DUE
+  ON_DUE_DATE
+  DAYS_AFTER_DUE
+}
+
+enum ReminderChannel {
+  WHATSAPP
+  EMAIL
+  SMS
+}
+
+enum ReminderDeliveryStatus {
+  SENT
+  FAILED
+  DELIVERED
+  READ
+}
+
+model ReminderRule {
+  id                String              @id @default(uuid())
+  name              String
+  triggerType       ReminderTriggerType
+  triggerOffsetDays Int                 @default(0)
+  channel           ReminderChannel
+  messageTemplate   String
+  active            Boolean             @default(true)
+
+  logs ReminderLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@map("reminder_rules")
+}
+
+model ReminderLog {
+  id             String                 @id @default(uuid())
+  ruleId         String
+  customerId     String
+  invoiceId      String
+  channel        ReminderChannel
+  message        String
+  sentAt         DateTime?
+  deliveryStatus ReminderDeliveryStatus
+  // Bounded retry (see EDGE_CASES.md #12) — each daily job run retries a FAILED row (updating
+  // this same row, never creating a new one) until retryCount hits the cap, then it's left
+  // FAILED and surfaced for visibility rather than retried forever.
+  retryCount     Int                    @default(0)
+  lastError      String?
+  responseText   String?
+  responseAt     DateTime?
+
+  rule     ReminderRule @relation(fields: [ruleId], references: [id])
+  customer Customer     @relation(fields: [customerId], references: [id])
+  invoice  Invoice      @relation(fields: [invoiceId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // One rule fires at most once (ever) per invoice — this row IS the duplicate-suppression
+  // key (see BUSINESS_WORKFLOW.md §5 and EDGE_CASES.md #12); retries update it in place.
+  @@unique([ruleId, invoiceId])
+  @@index([deliveryStatus])
+  @@index([customerId])
+  @@map("reminder_logs")
 }
