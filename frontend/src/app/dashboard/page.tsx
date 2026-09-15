@@ -2,6 +2,9 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { FacilityTypePieChart } from '@/components/charts/facility-type-pie-chart';
+import { MonthlyCollectionChart } from '@/components/charts/monthly-collection-chart';
+import { TalukaAgingStackedChart } from '@/components/charts/taluka-aging-stacked-chart';
 import { RequireAuth } from '@/components/require-auth';
 import { useAuth } from '@/lib/auth-context';
 import { getDashboardSummary } from '@/lib/dashboard-api';
@@ -82,6 +85,21 @@ function DashboardContent() {
             </div>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+                <h2 className="mb-2 text-sm font-semibold text-gray-900">Customers by Facility Type</h2>
+                <FacilityTypePieChart data={summary.facilityTypeBreakdown} />
+              </div>
+
+              <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+                <h2 className="mb-2 text-sm font-semibold text-gray-900">Outstanding by Taluka &amp; Age</h2>
+                <TalukaAgingStackedChart data={summary.talukaAgingBreakdown} />
+              </div>
+
+              <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm lg:col-span-2">
+                <h2 className="mb-2 text-sm font-semibold text-gray-900">Monthly Collection Trend</h2>
+                <MonthlyCollectionChart data={summary.monthlyCollectionTrend} />
+              </div>
+
               <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
                 <h2 className="mb-2 text-sm font-semibold text-gray-900">Top Overdue Customers</h2>
                 <ul className="divide-y divide-gray-100 text-sm">
