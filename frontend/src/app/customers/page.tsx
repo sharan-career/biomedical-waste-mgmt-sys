@@ -23,16 +23,10 @@ function CustomersContent() {
   const totalPages = meta ? Math.max(1, Math.ceil(meta.total / meta.limit)) : 1;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <Link href="/dashboard" className="text-sm text-blue-600 hover:underline">
-              ← Dashboard
-            </Link>
-            <h1 className="mt-1 text-lg font-semibold text-gray-900">Customers</h1>
-          </div>
-          {canManage && (
+    <div className="mx-auto max-w-5xl">
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-lg font-semibold text-gray-900">Customers</h1>
+        {canManage && (
             <Link
               href="/customers/new"
               className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
@@ -136,7 +130,6 @@ function CustomersContent() {
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 }

@@ -108,8 +108,7 @@ function InvoiceDetailContent() {
   const sgstTotal = invoice.lineItems.reduce((sum, l) => sum + Number(l.sgstAmount), 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 print:bg-white print:p-0">
-      <div className="mx-auto max-w-3xl space-y-4 print:max-w-none">
+    <div className="mx-auto max-w-3xl space-y-4 print:max-w-none">
         <div className="flex items-center justify-between print:hidden">
           <Link href={`/contracts/${invoice.contractId}`} className="text-sm text-blue-600 hover:underline">
             ← {invoice.contract.contractNumber}
@@ -343,7 +342,6 @@ function InvoiceDetailContent() {
             ))}
           </ul>
         </div>
-      </div>
     </div>
   );
 }

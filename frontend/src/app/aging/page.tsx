@@ -19,16 +19,10 @@ function AgingReportContent() {
   const report = data?.data;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-4xl space-y-6">
-        <div>
-          <Link href="/dashboard" className="text-sm text-blue-600 hover:underline">
-            ← Dashboard
-          </Link>
-          <h1 className="mt-1 text-lg font-semibold text-gray-900">Outstanding / Aging Report</h1>
-        </div>
+    <div className="mx-auto max-w-4xl space-y-6">
+      <h1 className="text-lg font-semibold text-gray-900">Outstanding / Aging Report</h1>
 
-        {isLoading && <p className="text-sm text-gray-500">Loading…</p>}
+      {isLoading && <p className="text-sm text-gray-500">Loading…</p>}
 
         {report && (
           <>
@@ -78,9 +72,8 @@ function AgingReportContent() {
                 </tbody>
               </table>
             </div>
-          </>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 }

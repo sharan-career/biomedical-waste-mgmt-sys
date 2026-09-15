@@ -176,9 +176,8 @@ function CustomerDetailContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-3xl space-y-6">
-        <div>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <div>
           <Link href="/customers" className="text-sm text-blue-600 hover:underline">
             ← Customers
           </Link>
@@ -233,7 +232,6 @@ function CustomerDetailContent() {
         <PaymentsPanel customerId={customerId} canManage={canManage} />
         <FollowUpsPanel customerId={customerId} canManage={canManage} />
         <ContactsPanel customerId={customerId} canManage={canManage} />
-      </div>
     </div>
   );
 }

@@ -189,12 +189,11 @@ function ContractDetailContent() {
   if (!contract) return <div className="p-8 text-sm text-red-600">Contract not found.</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-3xl space-y-6">
-        <div>
-          <Link href={`/customers/${contract.customerId}`} className="text-sm text-blue-600 hover:underline">
-            ← {contract.customer.organizationName}
-          </Link>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <div>
+        <Link href={`/customers/${contract.customerId}`} className="text-sm text-blue-600 hover:underline">
+          ← {contract.customer.organizationName}
+        </Link>
           <div className="mt-1 flex items-center justify-between">
             <h1 className="text-lg font-semibold text-gray-900">{contract.contractNumber}</h1>
             <div className="flex items-center gap-2">
@@ -309,7 +308,6 @@ function ContractDetailContent() {
         </div>
 
         <InvoicesPanel contractId={contractId} contractStatus={contract.status} canManage={canManage} />
-      </div>
     </div>
   );
 }

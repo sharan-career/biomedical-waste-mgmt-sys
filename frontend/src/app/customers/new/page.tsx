@@ -26,19 +26,13 @@ function NewCustomerContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-3xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <Link href="/customers" className="text-sm text-blue-600 hover:underline">
-          ← Customers
-        </Link>
-        <h1 className="mb-6 mt-1 text-lg font-semibold text-gray-900">New Customer</h1>
-        {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
-        <CustomerForm
-          defaultValues={customerToFormDefaults()}
-          onSubmit={handleSubmit}
-          submitLabel="Create Customer"
-        />
-      </div>
+    <div className="mx-auto max-w-3xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <Link href="/customers" className="text-sm text-blue-600 hover:underline">
+        ← Customers
+      </Link>
+      <h1 className="mb-6 mt-1 text-lg font-semibold text-gray-900">New Customer</h1>
+      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+      <CustomerForm defaultValues={customerToFormDefaults()} onSubmit={handleSubmit} submitLabel="Create Customer" />
     </div>
   );
 }

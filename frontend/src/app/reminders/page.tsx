@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import Link from 'next/link';
 import { useState } from 'react';
 import { RequireAuth } from '@/components/require-auth';
 import { ApiError } from '@/lib/api-client';
@@ -92,16 +91,10 @@ function RemindersContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-4xl space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <Link href="/dashboard" className="text-sm text-blue-600 hover:underline">
-              ← Dashboard
-            </Link>
-            <h1 className="mt-1 text-lg font-semibold text-gray-900">Automated Reminders</h1>
-          </div>
-          <button
+    <div className="mx-auto max-w-4xl space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-lg font-semibold text-gray-900">Automated Reminders</h1>
+        <button
             onClick={() => void handleRunCheck()}
             disabled={running}
             className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
@@ -230,7 +223,6 @@ function RemindersContent() {
             ))}
           </ul>
         </div>
-      </div>
     </div>
   );
 }

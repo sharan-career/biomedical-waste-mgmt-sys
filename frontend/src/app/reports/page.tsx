@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
 import { useState } from 'react';
 import { RequireAuth } from '@/components/require-auth';
 import { downloadReportCsv, fetchReport, REPORT_TYPES, type ReportType } from '@/lib/reports-api';
@@ -78,16 +77,10 @@ function ReportsContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-5xl space-y-4">
-        <div>
-          <Link href="/dashboard" className="text-sm text-blue-600 hover:underline">
-            ← Dashboard
-          </Link>
-          <h1 className="mt-1 text-lg font-semibold text-gray-900">Reports</h1>
-        </div>
+    <div className="mx-auto max-w-5xl space-y-4">
+      <h1 className="text-lg font-semibold text-gray-900">Reports</h1>
 
-        <div className="flex flex-wrap items-end gap-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-wrap items-end gap-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
           <div>
             <label className="mb-1 block text-xs text-gray-500">Report</label>
             <select
@@ -149,7 +142,6 @@ function ReportsContent() {
           )}
           {!isLoading && !isError && <GenericTable rows={rows} />}
         </div>
-      </div>
     </div>
   );
 }

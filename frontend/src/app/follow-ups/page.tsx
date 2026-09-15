@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import Link from 'next/link';
 import { useState } from 'react';
 import { RequireAuth } from '@/components/require-auth';
 import { ApiError } from '@/lib/api-client';
@@ -161,16 +160,10 @@ function FollowUpsTodayContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-4xl space-y-4">
-        <div>
-          <Link href="/dashboard" className="text-sm text-blue-600 hover:underline">
-            ← Dashboard
-          </Link>
-          <h1 className="mt-1 text-lg font-semibold text-gray-900">Follow-ups Today</h1>
-        </div>
+    <div className="mx-auto max-w-4xl space-y-4">
+      <h1 className="text-lg font-semibold text-gray-900">Follow-ups Today</h1>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
         {isLoading && <p className="text-sm text-gray-500">Loading…</p>}
 
         <div className="space-y-3">
@@ -239,7 +232,6 @@ function FollowUpsTodayContent() {
             </div>
           ))}
         </div>
-      </div>
     </div>
   );
 }

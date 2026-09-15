@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, type ReactNode } from 'react';
+import { AppShell } from '@/components/app-shell';
 import { useAuth, type RoleName } from '@/lib/auth-context';
 
 /**
@@ -38,5 +39,5 @@ export function RequireAuth({
     return null;
   }
 
-  return <>{children}</>;
+  return <AppShell>{children}</AppShell>;
 }
