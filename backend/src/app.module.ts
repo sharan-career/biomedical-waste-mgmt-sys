@@ -12,9 +12,11 @@ import { AuthModule } from './modules/auth/auth.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { CustomersModule } from './modules/customers/customers.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { FollowUpsModule } from './modules/follow-ups/follow-ups.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { RemindersModule } from './modules/reminders/reminders.module';
+import { ReportsModule } from './modules/reports/reports.module';
 import { TalukasModule } from './modules/talukas/talukas.module';
 import { UsersModule } from './modules/users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -34,6 +36,8 @@ import { PrismaModule } from './prisma/prisma.module';
     PaymentsModule,
     FollowUpsModule,
     RemindersModule,
+    DashboardModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [

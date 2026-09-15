@@ -1,4 +1,5 @@
 import { CustomerType, FacilityType } from '@prisma/client';
+import { Transform } from 'class-transformer';
 import {
   IsEnum,
   IsInt,
@@ -8,6 +9,11 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+
+// An HTML <select> with no option chosen submits "" — treat that the same as omitted,
+// rather than 400ing on an optional field just because the client sent an empty string.
+const emptyStringToUndefined = ({ value }: { value: unknown }) =>
+  value === '' ? undefined : value;
 
 export class CreateCustomerDto {
   @IsString()
@@ -33,6 +39,7 @@ export class CreateCustomerDto {
   talukaId: string;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsUUID()
   routeId?: string;
 
@@ -53,10 +60,12 @@ export class CreateCustomerDto {
   pincode: string;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   gstNumber?: string;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   panNumber?: string;
 
